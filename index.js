@@ -1,27 +1,37 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const bodyParser = require('body-parser');
 
 const app = express();
 const port = 3001;
 
+// Enable cookie parsing
+app.use(cookieParser());
+
 // Set up session middleware
 app.use(session({
-  secret: 'your-secret-key',
+  secret: '38sisjsk92',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 3600000, // Expires after 1 hour (in milliseconds)
+    httpOnly: true, // Accessible only via HTTP(S)
+    secure: false, // Sent only over HTTPS
+  },   
 }));
 
+
 // Parse URL-encoded bodies
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.get('/', (req, res) => {
   if (req.session.username) {
-    res.send(`Welcome back, ${req.session.username}! <a href="/logout">Logout</a>`);
+    res.send(`Welcome to the page, ${req.session.username}! <a href="/logout">Logout</a>`);
   } else {
-    res.send('Welcome! Please <a href="/login">login</a>.');
+    res.send('Please <a href="/login">login</a>.');
   }
+  console.log(req.session)
 });
 
 app.get('/login', (req, res) => {
@@ -42,6 +52,7 @@ app.post('/login', (req, res) => {
   req.session.username = username;
   res.redirect('/');
 });
+
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
