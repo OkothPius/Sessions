@@ -18,7 +18,7 @@ app.use(session({
     maxAge: 3600000, // Expires after 1 hour (in milliseconds)
     httpOnly: true, // Accessible only via HTTP(S)
     secure: false, // Sent only over HTTPS (if used when true in localhost it does not allow login. Ensure it is false when testing the application)
-  },   
+  },
 }));
 
 
@@ -42,6 +42,9 @@ app.get('/login', (req, res) => {
     res.send(`
       <form method="post" action="/login">
         <input type="text" name="username" placeholder="Username" required>
+        <br /> <br />
+        <input type="text" name="password" placeholder="Password" required>
+        <br /> <br />
         <button type="submit">Login</button>
       </form>
     `);
@@ -49,8 +52,9 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  const { username } = req.body;
+  const { username, password } = req.body;
   req.session.username = username;
+  req.password = password;
   res.redirect('/');
 });
 
