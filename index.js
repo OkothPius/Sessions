@@ -1,6 +1,9 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+// const csrf = require('csurf')
+// const helmet = require('helmet');
+
 
 const app = express();
 const port = 3001;
@@ -20,6 +23,7 @@ app.use(session({
     secure: false, // Sent only over HTTPS (if used when true in localhost it does not allow login. Ensure it is false when testing the application)
   },
 }));
+//http://localhost:3001/
 
 
 // Parse URL-encoded bodies
@@ -75,7 +79,13 @@ app.get('/logout', (req, res) => {
   });
 });
 
+// app.use(csurf());
+// app.use(function (req, res, next) {
+//     res.locals.csrftoken = req.session._csrf;
+//     next();
+// });
 
+// server.use(helmet());
 // Start the server
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
